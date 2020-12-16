@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from account.views import loginView, register, auth, forgot_password, getUser, change_password
 from exercise.views import get_exercise
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 # from login.views import loginView, register, auth
 
 urlpatterns = [
@@ -29,3 +30,5 @@ urlpatterns = [
     path('changepassword/', change_password),
     path('getexercise/<username>/', get_exercise),
 ]
+
+urlpatterns += staticfiles_urlpatterns()
