@@ -1,0 +1,32 @@
+<h1>This is login page</h1>
+
+<ul>
+    {% for item in all_items %}
+        <li>{{ item.last_name }}</li>
+    {% endfor %}
+</ul>
+
+<form action="/register/" method="post">{% csrf_token %}
+    <input type="email" name="email" placeholder="Email">
+    <input type="text" name="username" placeholder="username">
+    <input type="text" name="last_name" placeholder="Last Name">
+    <input type="text" name="first_name" placeholder="First Name">
+    <input type="date" name="dob">
+    <input type="checkbox" id="male" name="male">
+    <label for="male">Male</label>
+    <input type="checkbox" id="female" name="female">
+    <label for="female">Female</label>
+    <input type="password" name="password">
+    <input type="submit" value="Add">
+</form>
+<br>
+<form action="/auth/" method="post">{% csrf_token %}
+    <input type="text" name="username" placeholder="username"> 
+    <input type="password" name="password">
+    <input type="submit" value="Login">
+</form>
+<br>
+<form action="/forgotpassword/" method="post">{% csrf_token %}
+    <input type="text" name="username" placeholder="username"> 
+    <input type="submit" value="Forgot">
+</form>
