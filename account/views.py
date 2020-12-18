@@ -33,15 +33,18 @@ def register(request):
         firstName = request.POST['first_name']
         lastName = request.POST['last_name']
         dob = request.POST['dob']
-        if (hasattr(request.POST, 'weight')):
+        if ('weight' in request.POST):
             weight = float(request.POST['weight'])
         else:
             weight = 0
-        if (hasattr(request.POST, 'height')):
+        if ('height' in request.POST):
             height = float(request.POST['height'])
         else:
             height = 0
-        gender = bool(request.POST['gender'])
+        if (request.POST['gender'] == 'True':
+            gender = True
+        else:
+            gender = False
         newAccount = Account.objects.create_user(username=username, email=email, password=password,
                                                  first_name=firstName, last_name=lastName, dob=dob, gender=gender,
                                                  weight=weight, height=height)
