@@ -41,7 +41,7 @@ def register(request):
             height = float(request.POST['height'])
         else:
             height = 0
-        if (request.POST['gender'] == 'True':
+        if (request.POST['gender'] == 'True'):
             gender = True
         else:
             gender = False
