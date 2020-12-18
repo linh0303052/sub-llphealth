@@ -49,9 +49,7 @@ def register(request):
                                                  first_name=firstName, last_name=lastName, dob=dob, gender=gender,
                                                  weight=weight, height=height)
         if (newAccount is not None):
-            data = {'success': True}
-        else:
-            data = {'success': False}
+            data['success'] = True
     else:
         data['message'] = 'method not supported'
     return HttpResponse(json.dumps(data), content_type='application/json')
@@ -149,25 +147,24 @@ supported_extension = ['jpg', 'jpeg', 'bmp', 'svg', 'png']
 def avatar(request):
     data = {'success': False}
     if (request.method == 'POST'):
+        f = request.FILES['file']
         extension = f.name.split('.')[1]
         if extension not in supported_extension:
             data['message'] = 'extension not supported'
             return HttpResponse(json.dumps(data), content_type='application/json')
 
         username = request.POST['username']
-        f = request.FILES['file']
-        filename = handle_uploaded_image(f, 'avatar', username, extension)
-        data.success = True
+        filename = handle_uploaded_image(f, username, extension)
+        data['success'] = True
     else:
         data['message'] = 'method not supported'
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
-def handle_uploaded_image(f, typefile, filename, extension):
-    filename = 'staticfiles/%s/%s.%s' % (typefile, filename, extension)
+def handle_uploaded_image(f, filename, extension):
+    filename = 'staticfiles/avatar/%s.%s' % (filename, extension)
     print(filename)
     with open(filename, 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
     return filename
-
