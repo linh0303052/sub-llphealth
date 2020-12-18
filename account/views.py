@@ -52,10 +52,7 @@ def register(request):
         height = request.POST['height']
     else:
         height = 0
-    if (hasattr(request.POST,'male')):
-        gender = True
-    else:
-        gender = False
+    gender = request.POST['gender']
     newAccount = Account.objects.create_user(username=username, email=email, password=password,
                                              first_name=firstName, last_name=lastName, dob=dob, gender=gender,
                                              weight=weight, height=height)
