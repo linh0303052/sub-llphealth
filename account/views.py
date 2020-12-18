@@ -12,143 +12,159 @@ from datetime import datetime
 import json
 
 # Create your views here.
-def loginView(request):
-    all_items = Account.objects.all()
-    return render(request, 'login.html', {'all_items': all_items})
-
-
 def register(request):
-    username = request.POST['username']
-    email = request.POST['email']
-    user = Account.objects.filter(username=username)
-    if (len(user) > 0):
-        data = {'success': False,
-                'message': 'Username already exists.'}
-        return HttpResponse(json.dumps(data), content_type='application/json')
+    data = {'success': False}
+    if (request.method == 'POST'):
+        username = request.POST['username']
+        email = request.POST['email']
+        user = Account.objects.filter(username=username)
+        if (len(user) > 0):
+            data = {'success': False,
+                    'message': 'Username already exists.'}
+            return HttpResponse(json.dumps(data), content_type='application/json')
 
-    user = Account.objects.filter(email=email)
-    if (len(user) > 0):
-        data = {'success': False,
-                'message': 'Email already exists.'}
-        return HttpResponse(json.dumps(data), content_type='application/json')
-        pass
+        user = Account.objects.filter(email=email)
+        if (len(user) > 0):
+            data = {'success': False,
+                    'message': 'Email already exists.'}
+            return HttpResponse(json.dumps(data), content_type='application/json')
 
-    password = request.POST['password']
-    firstName = request.POST['first_name']
-    lastName = request.POST['last_name']
-    dob = request.POST['dob']
-    if (hasattr(request.POST,'weight')):
-        weight = float(request.POST['weight'])
+        password = request.POST['password']
+        firstName = request.POST['first_name']
+        lastName = request.POST['last_name']
+        dob = request.POST['dob']
+        if (hasattr(request.POST, 'weight')):
+            weight = float(request.POST['weight'])
+        else:
+            weight = 0
+        if (hasattr(request.POST, 'height')):
+            height = float(request.POST['height'])
+        else:
+            height = 0
+        gender = bool(request.POST['gender'])
+        newAccount = Account.objects.create_user(username=username, email=email, password=password,
+                                                 first_name=firstName, last_name=lastName, dob=dob, gender=gender,
+                                                 weight=weight, height=height)
+        if (newAccount is not None):
+            data = {'success': True}
+        else:
+            data = {'success': False}
     else:
-        weight = 0
-    if (hasattr(request.POST,'height')):
-        height = float(request.POST['height'])
-    else:
-        height = 0
-    gender = bool(request.POST['gender'])
-    newAccount = Account.objects.create_user(username=username, email=email, password=password,
-                                             first_name=firstName, last_name=lastName, dob=dob, gender=gender,
-                                             weight=weight, height=height)
-    if (newAccount is not None):
-        data = {'success': True}
-    else:
-        data = {'success': False}
+        data['message'] = 'method not supported'
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
-@csrf_exempt
 def auth(request):
-    print(request.content_type)
     data = {'success': False}
     if request.method == 'POST':
         login_form = AuthenticationForm(request, request.POST)
         if login_form.is_valid():
             user_login(request, login_form.get_user())
             data['success'] = True
-        return HttpResponse(json.dumps(data), content_type='application/json')
+    else:
+        data['message'] = 'method not supported'
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
-@csrf_exempt
 def forgot_password(request):
     data = {'success': False}
-    chars = 'abcdefghiklmnopqrstuvwxyz1234567890ABCDEFGHIKLMNOPQRSTUVWXYZ'
-    password = ''
-    for i in range(0, 8):
-        password += random.choice(chars)
-    email = request.POST['email']
+    if (request.method == 'POST'):
+        chars = 'abcdefghiklmnopqrstuvwxyz1234567890ABCDEFGHIKLMNOPQRSTUVWXYZ'
+        password = ''
+        for i in range(0, 8):
+            password += random.choice(chars)
+        email = request.POST['email']
 
-    user = Account.objects.filter(email=email)
-    if (len(user) == 0):
-        data['message'] = 'email does not exist'
-        return HttpResponse(json.dumps(data), content_type='application/json')
-    
-    user = Account.objects.get(email=email)
-    username = user.username
-    user.set_password(password)
-    user.save()
-    send_mail(
-        subject='[LLP Health] Reset password',
-        message='Dear {},\n\nYour password has been changed to: {}\nLog in with this new password and then change to another.\n\nBest regards.'.format(username, password),
-        recipient_list=[email],
-        from_email='ltt.lop9a1.lhlinh@gmail.com',
-    )
-    data['success'] = True
+        user = Account.objects.filter(email=email)
+        if (len(user) == 0):
+            data['message'] = 'email does not exist'
+            return HttpResponse(json.dumps(data), content_type='application/json')
+
+        user = Account.objects.get(email=email)
+        username = user.username
+        user.set_password(password)
+        user.save()
+        send_mail(
+            subject='[LLP Health] Reset password',
+            message='Dear {},\n\nYour password has been changed to: {}\nLog in with this new password and then change to another.\n\nBest regards.'.format(
+                username, password),
+            recipient_list=[email],
+            from_email='ltt.lop9a1.lhlinh@gmail.com',
+        )
+        data['success'] = True
+    else:
+        data['message'] = 'method not supported'
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
 def change_password(request):
     data = {'success': False}
-    username = request.POST['username']
-    old_password = request.POST['old_password']
-    new_password = request.POST['new_password']
-    user = Account.objects.get(username=username)
-    if (user.check_password(old_password)):
-        user.set_password(new_password)
-        data['success'] = True
-        user.save()
+    if (request.method == 'POST'):
+        username = request.POST['username']
+        old_password = request.POST['old_password']
+        new_password = request.POST['new_password']
+        user = Account.objects.get(username=username)
+        if (user.check_password(old_password)):
+            user.set_password(new_password)
+            data['success'] = True
+            user.save()
+        else:
+            data['message'] = 'wrong password'
     else:
-        data['message'] = 'wrong password'
+        data['message'] = 'method not supported'
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
 def getUser(request, username):
     data = {'success': False}
-    user = Account.objects.filter(username=username)
-    if (len(user) == 0):
-        data['message'] = 'This user does not exists.'
-        return HttpResponse(json.dumps(data), content_type='application/json')
+    if(request.method == 'GET'):
+        user = Account.objects.filter(username=username)
+        if (len(user) == 0):
+            data['message'] = 'This user does not exists.'
+            return HttpResponse(json.dumps(data), content_type='application/json')
 
-    user = Account.objects.get(username=username)
-    data['First name'] = user.first_name
-    data['Last name'] = user.last_name
-    data['Email'] = user.email
-    data['D.O.B'] = user.dob.strftime('%Y-%m-%d')
-    data['Height'] = user.height
-    data['Weight'] = user.weight
-    if user.gender:
-        data['Gender'] = 'Male'
+        user = Account.objects.get(username=username)
+        data['First name'] = user.first_name
+        data['Last name'] = user.last_name
+        data['Email'] = user.email
+        data['D.O.B'] = user.dob.strftime('%Y-%m-%d')
+        data['Height'] = user.height
+        data['Weight'] = user.weight
+        if user.gender:
+            data['Gender'] = 'Male'
+        else:
+            data['Gender'] = 'Female'
+        data['success'] = True
     else:
-        data['Gender'] = 'Female'
-    data['success'] = True
+        data['message'] = 'method not supported'
     return HttpResponse(json.dumps(data), content_type='application/json')
 
-file_type = {'image/jpge':'jpg',
-        'image/png':'png'}
+
+supported_extension = ['jpg', 'jpeg', 'bmp', 'svg', 'png']
+
 
 def avatar(request):
+    data = {'success': False}
     if (request.method == 'POST'):
+        extension = f.name.split('.')[1]
+        if extension not in supported_extension:
+            data['message'] = 'extension not supported'
+            return HttpResponse(json.dumps(data), content_type='application/json')
+
         username = request.POST['username']
         f = request.FILES['file']
-        extension = f.name.split('.')[1]
         filename = handle_uploaded_image(f, 'avatar', username, extension)
-        return HttpResponse(filename)  
-    return HttpResponse('Method not supported')
+        data.success = True
+    else:
+        data['message'] = 'method not supported'
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
 
 def handle_uploaded_image(f, typefile, filename, extension):
-    filename = 'placefilehere/%s/%s.%s'%(typefile, filename, extension)
+    filename = 'staticfiles/%s/%s.%s' % (typefile, filename, extension)
     print(filename)
     with open(filename, 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
     return filename
+
