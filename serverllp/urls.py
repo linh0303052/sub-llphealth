@@ -15,19 +15,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from account.views import loginView, register, auth, forgot_password, getUser, change_password
+from account import views
 from exercise.views import get_exercise
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-# from login.views import loginView, register, auth
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', loginView),
-    path('register/', register),
-    path('auth/', auth),
-    path('forgotpassword/', forgot_password),
-    path('getuser/<username>/', getUser),
-    path('changepassword/', change_password),
+    path('login/', views.loginView),
+    path('register/', views.register),
+    path('auth/', views.auth),
+    path('avatar/', views.avatar),
+    path('forgotpassword/', views.forgot_password),
+    path('getuser/<username>/', views.getUser),
+    path('changepassword/', views.change_password),
     path('getexercise/<username>/', get_exercise),
 ]
 

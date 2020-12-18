@@ -12,13 +12,11 @@ from datetime import datetime
 import json
 
 # Create your views here.
-@csrf_exempt
 def loginView(request):
     all_items = Account.objects.all()
     return render(request, 'login.html', {'all_items': all_items})
 
 
-@csrf_exempt
 def register(request):
     username = request.POST['username']
     email = request.POST['email']
@@ -33,26 +31,21 @@ def register(request):
         data = {'success': False,
                 'message': 'Email already exists.'}
         return HttpResponse(json.dumps(data), content_type='application/json')
+        pass
 
     password = request.POST['password']
-    if (hasattr(request.POST,'first_name')):
-        firstName = request.POST['first_name']
-    else:
-        firstName = 'No'
-    if (hasattr(request.POST,'last_name')):
-        lastName = request.POST['last_name']
-    else:
-        lastName = 'Name'
+    firstName = request.POST['first_name']
+    lastName = request.POST['last_name']
     dob = request.POST['dob']
     if (hasattr(request.POST,'weight')):
-        weight = request.POST['weight']
+        weight = float(request.POST['weight'])
     else:
         weight = 0
     if (hasattr(request.POST,'height')):
-        height = request.POST['height']
+        height = float(request.POST['height'])
     else:
         height = 0
-    gender = request.POST['gender']
+    gender = bool(request.POST['gender'])
     newAccount = Account.objects.create_user(username=username, email=email, password=password,
                                              first_name=firstName, last_name=lastName, dob=dob, gender=gender,
                                              weight=weight, height=height)
@@ -61,6 +54,7 @@ def register(request):
     else:
         data = {'success': False}
     return HttpResponse(json.dumps(data), content_type='application/json')
+
 
 @csrf_exempt
 def auth(request):
@@ -103,7 +97,6 @@ def forgot_password(request):
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
-@csrf_exempt
 def change_password(request):
     data = {'success': False}
     username = request.POST['username']
@@ -119,7 +112,6 @@ def change_password(request):
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
-@csrf_exempt
 def getUser(request, username):
     data = {'success': False}
     user = Account.objects.filter(username=username)
@@ -144,21 +136,19 @@ def getUser(request, username):
 file_type = {'image/jpge':'jpg',
         'image/png':'png'}
 
-@csrf_exempt
-def upload_avatar(request):
-    username = request.POST['username']
-    f = request.FILES['avatar']
-    content_type = request.content_type
-    if content_type in file_type:
-        extension = file_type[request.content_type]
-    else:
-        extension = 'jpg'
-    handle_uploaded_image(f, 'avatar', filename, extension)
+def avatar(request):
+    if (request.method == 'POST'):
+        username = request.POST['username']
+        f = request.FILES['file']
+        extension = f.name.split('.')[1]
+        filename = handle_uploaded_image(f, 'avatar', username, extension)
+        return HttpResponse(filename)  
+    return HttpResponse('Method not supported')
 
-@csrf_exempt
-def handle_uploaded_image(f, type, filename, extension):
-    with open('../static/{type}/{filename}.{extension}', 'w'.format(type = type, 
-                                                                    filename = filename,
-                                                                    extension = extension)) as destination:
+def handle_uploaded_image(f, typefile, filename, extension):
+    filename = 'placefilehere/%s/%s.%s'%(typefile, filename, extension)
+    print(filename)
+    with open(filename, 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
+    return filename
