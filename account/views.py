@@ -147,11 +147,12 @@ supported_extension = ['jpg', 'jpeg', 'bmp', 'svg', 'png']
 def avatar(request):
     data = {'success': False}
     if (request.method == 'POST'):
-        f = request.FILES['file']
-        extension = f.name.split('.')[1]
-        if extension not in supported_extension:
-            data['message'] = 'extension not supported'
-            return HttpResponse(json.dumps(data), content_type='application/json')
+        f = request.POST['file']
+        f = bytearray(f)
+        extension = 'png
+        # if extension not in supported_extension:
+        #     data['message'] = 'extension not supported'
+        #     return HttpResponse(json.dumps(data), content_type='application/json')
 
         username = request.POST['username']
         filename = handle_uploaded_image(f, username, extension)
@@ -165,6 +166,5 @@ def handle_uploaded_image(f, filename, extension):
     filename = 'staticfiles/avatar/%s.%s' % (filename, extension)
     print(filename)
     with open(filename, 'wb+') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
+        destination.write(f)
     return filename
