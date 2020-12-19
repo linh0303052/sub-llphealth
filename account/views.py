@@ -149,7 +149,7 @@ def avatar(request):
     if (request.method == 'POST'):
         f = request.POST['data']['file']
         f = bytearray(f)
-        extension = 'png
+        extension = 'png'
         # if extension not in supported_extension:
         #     data['message'] = 'extension not supported'
         #     return HttpResponse(json.dumps(data), content_type='application/json')
