@@ -24,7 +24,7 @@ urlpatterns = [
     #path('login/', views.loginView),
     path('register/', views.register),
     path('auth/', views.auth),
-    path('avatar/', views.avatar),
+    path('avatar/', views.avatar2),
     path('avatar/<filename>', views.getavatar),
     path('forgotpassword/', views.forgot_password),
     path('getuser/<username>/', views.getUser),

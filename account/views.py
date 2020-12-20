@@ -142,16 +142,26 @@ def getUser(request, username):
 
 #0supported_extension = ['jpg', 'jpeg', 'bmp', 'svg', 'png']
 
+def avatar2(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        filename = handle_base64_str(request.POST['image'], username)
+    else:
+        return HttpResponse('method not supported')
+
+
+def handle_base64_str(imgstring, filename):
+    imgdata = base64.b64decode(imgstring)
+    with open('staticfiles/avatar/'+filename+'.png', 'wb+') as destination:
+            destination.write(imgdata)
+    return filename
+
 
 def avatar(request):
     data = {'success': False}
     if (request.method == 'POST'):
-        f = request.POST['data']['file']
-        username = request.POST['data']['username']
-        fil = open('staticfiles/text/%s.txt'%(username), 'w')
-        fil.write(type(fil))
-        fil.close()
-        f = bytearray(f)
+        username = request.POST['username']
+        f = request.POST['file']
         extension = 'png'
         # if extension not in supported_extension:
         #     data['message'] = 'extension not supported'
@@ -166,9 +176,9 @@ def avatar(request):
 
 def handle_uploaded_image(f, filename, extension):
     filename = 'staticfiles/avatar/%s.%s' % (filename, extension)
-    print(filename)
     with open(filename, 'wb+') as destination:
-        destination.write(f)
+        for chunk in f.chunks():
+            destination.write(chunk)
     return filename
 
 
