@@ -25,6 +25,7 @@ urlpatterns = [
     path('register/', views.register),
     path('auth/', views.auth),
     path('avatar/', views.avatar),
+    paht('avatar/<filename>', views.getavatar),
     path('forgotpassword/', views.forgot_password),
     path('getuser/<username>/', views.getUser),
     path('changepassword/', views.change_password),

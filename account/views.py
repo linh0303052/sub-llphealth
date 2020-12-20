@@ -168,3 +168,11 @@ def handle_uploaded_image(f, filename, extension):
     with open(filename, 'wb+') as destination:
         destination.write(f)
     return filename
+
+
+def getavatar(request, filename):
+    if (request.method == 'GET'):
+        with open('staticfiles/avatar/%s'%(filename), "rb") as f:
+            return HttpResponse(f.read(), content_type="image/jpeg")
+    else:
+        return HttpResponse('method not supported')
