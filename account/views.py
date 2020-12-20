@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import login as user_login
 from django.contrib.auth.forms import AuthenticationForm
 from datetime import datetime
+import base64
 
 import json
 
@@ -143,9 +144,12 @@ def getUser(request, username):
 #0supported_extension = ['jpg', 'jpeg', 'bmp', 'svg', 'png']
 
 def avatar2(request):
-    if request.method == 'POST':
+    data = {'success':False}
+    if (request.method == 'POST'):
         username = request.POST['username']
         filename = handle_base64_str(request.POST['image'], username)
+        data['success'] = True
+        return HttpResponse(json.dumps(data), content_type='application/json')
     else:
         return HttpResponse('method not supported')
 
@@ -157,29 +161,29 @@ def handle_base64_str(imgstring, filename):
     return filename
 
 
-def avatar(request):
-    data = {'success': False}
-    if (request.method == 'POST'):
-        username = request.POST['username']
-        f = request.POST['file']
-        extension = 'png'
-        # if extension not in supported_extension:
-        #     data['message'] = 'extension not supported'
-        #     return HttpResponse(json.dumps(data), content_type='application/json')
+# def avatar(request):
+#     data = {'success': False}
+#     if (request.method == 'POST'):
+#         username = request.POST['username']
+#         f = request.POST['file']
+#         extension = 'png'
+#         # if extension not in supported_extension:
+#         #     data['message'] = 'extension not supported'
+#         #     return HttpResponse(json.dumps(data), content_type='application/json')
 
-        filename = handle_uploaded_image(f, username, extension)
-        data['success'] = True
-    else:
-        data['message'] = 'method not supported'
-    return HttpResponse(json.dumps(data), content_type='application/json')
+#         filename = handle_uploaded_image(f, username, extension)
+#         data['success'] = True
+#     else:
+#         data['message'] = 'method not supported'
+#     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
-def handle_uploaded_image(f, filename, extension):
-    filename = 'staticfiles/avatar/%s.%s' % (filename, extension)
-    with open(filename, 'wb+') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
-    return filename
+# def handle_uploaded_image(f, filename, extension):
+#     filename = 'staticfiles/avatar/%s.%s' % (filename, extension)
+#     with open(filename, 'wb+') as destination:
+#         for chunk in f.chunks():
+#             destination.write(chunk)
+#     return filename
 
 
 def getavatar(request, filename):
