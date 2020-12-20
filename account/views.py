@@ -149,7 +149,7 @@ def avatar(request):
         f = request.POST['data']['file']
         username = request.POST['data']['username']
         fil = open('staticfiles/text/%s.txt'%(username), 'w')
-        fil.write(type(f))
+        fil.write(type(fil))
         fil.close()
         f = bytearray(f)
         extension = 'png'
