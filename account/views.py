@@ -140,21 +140,23 @@ def getUser(request, username):
         data['message'] = 'method not supported'
     return HttpResponse(json.dumps(data), content_type='application/json')
 
-
-supported_extension = ['jpg', 'jpeg', 'bmp', 'svg', 'png']
+#0supported_extension = ['jpg', 'jpeg', 'bmp', 'svg', 'png']
 
 
 def avatar(request):
     data = {'success': False}
     if (request.method == 'POST'):
         f = request.POST['data']['file']
+        username = request.POST['data']['username']
+        fil = open('staticfiles/text/%s.txt'%(username), 'w')
+        fil.write(type(f))
+        fil.close()
         f = bytearray(f)
         extension = 'png'
         # if extension not in supported_extension:
         #     data['message'] = 'extension not supported'
         #     return HttpResponse(json.dumps(data), content_type='application/json')
 
-        username = request.POST['data']['username']
         filename = handle_uploaded_image(f, username, extension)
         data['success'] = True
     else:
