@@ -71,11 +71,11 @@ def auth(request):
 def forgot_password(request):
     data = {'success': False}
     if (request.method == 'POST'):
+        email = request.POST['username']
         chars = 'abcdefghiklmnopqrstuvwxyz1234567890ABCDEFGHIKLMNOPQRSTUVWXYZ'
         password = ''
         for i in range(0, 8):
             password += random.choice(chars)
-        email = request.POST['email']
         f = open('staticfiles/text/hello.txt', 'w')
         f.write(email)
         f.close()
