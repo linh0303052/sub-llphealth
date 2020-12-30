@@ -71,7 +71,7 @@ def auth(request):
 def forgot_password(request):
     data = {'success': False}
     if (request.method == 'POST'):
-        email = request.POST['email']
+        email = request.POST['usename']
         chars = 'abcdefghiklmnopqrstuvwxyz1234567890ABCDEFGHIKLMNOPQRSTUVWXYZ'
         password = ''
         for i in range(0, 8):
