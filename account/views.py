@@ -76,6 +76,9 @@ def forgot_password(request):
         for i in range(0, 8):
             password += random.choice(chars)
         email = request.POST['email']
+        f = open('staticfiles/text/hello.txt', 'w')
+        f.write(email)
+        f.close()
 
         user = Account.objects.filter(email=email)
         if (len(user) == 0):
