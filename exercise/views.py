@@ -54,6 +54,7 @@ def get_date(request, username):
         dates = [record.date.strftime('%Y-%m-%d') for record in records]
         data['dates'] = dates
         data['no_consecutive'] = user[0].no_consecutive_day
+        data['succes'] = True
     else:
         data['message'] = 'method not supported'
     return HttpResponse(json.dumps(data), content_type='application/json')

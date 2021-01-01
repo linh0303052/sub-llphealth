@@ -31,7 +31,7 @@ urlpatterns = [
     path('changepassword/', acc.change_password),
     path('getexercise/<username>/', exer.get_exercise),
     path('getexercisedates/<username>/', exer.get_date),
-    path('updatedates', exer.update_exercise),
+    path('updatedates/', exer.update_exercise),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
