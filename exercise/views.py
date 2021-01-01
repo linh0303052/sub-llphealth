@@ -50,7 +50,7 @@ def update_exercise(request):
 
 
 def get_date(request, username):
-    data = {'succes': False}
+    data = {'success': False}
     if (request.method == 'GET'):
         users = Account.objects.filter(username = username)
         user = users[0]
@@ -58,7 +58,7 @@ def get_date(request, username):
         dates = [record.date.strftime('%Y-%m-%d') for record in records]
         data['dates'] = dates
         data['no_consecutive'] = user.no_consecutive_day
-        data['succes'] = True
+        data['success'] = True
     else:
         data['message'] = 'method not supported'
     return HttpResponse(json.dumps(data), content_type='application/json')
