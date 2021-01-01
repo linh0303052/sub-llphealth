@@ -204,6 +204,7 @@ def getlevel(request, username):
         if len(users) > 0:
             user = users[0]
             data['level'] = user.get_level()
+            data['success']= True
     else:
         data['message'] = 'method not supported'
     return HttpResponse(json.dumps(data), content_type='application/json')
