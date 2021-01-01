@@ -29,18 +29,21 @@ def update_exercise(request):
     if request.method == 'POST':
         username = request.POST['username']
         current_date = datetime.datetime.now()
-        last_date = user[0].last_exercise
-
-        if last_date != current_date:
-            new_record = JoinExercise(user = user[0], date = current_date)
-            new_record.save()
-            if last_date == current_date - timedelta(days=1):
-                user[0].no_consecutive_day += 1
-            else:
-                user[0].no_consecutive_day = 1
-            last_date = current_date
+        users = Account.objects.filter(username=username)
+        if len(user) > 0:
+            user = users[0]
+            last_date = user.last_exercise
+            if last_date != current_date:
+                new_record = JoinExercise(user = user, date = current_date)
+                new_record.save()
+                if last_date == current_date - timedelta(days=1):
+                    user.no_consecutive_day += 1
+                else:
+                    user.no_consecutive_day = 1
+                user.last_exercise = current_date
+                user.save()
             
-        data['success'] = True
+            data['success'] = True
     else:
         data['message'] = 'method not supported'
     return HttpResponse(json.dumps(data), content_type='application/json')
@@ -49,11 +52,12 @@ def update_exercise(request):
 def get_date(request, username):
     data = {'succes': False}
     if (request.method == 'GET'):
-        user = Account.objects.filter(username = username)
-        records = JoinExercise.objects.filter(user = user[0])
+        users = Account.objects.filter(username = username)
+        user = users[0]
+        records = JoinExercise.objects.filter(user = user)
         dates = [record.date.strftime('%Y-%m-%d') for record in records]
         data['dates'] = dates
-        data['no_consecutive'] = user[0].no_consecutive_day
+        data['no_consecutive'] = user.no_consecutive_day
         data['succes'] = True
     else:
         data['message'] = 'method not supported'
