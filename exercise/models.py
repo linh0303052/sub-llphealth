@@ -20,10 +20,4 @@ class Exercise(models.Model):
 
 class JoinExercise(models.Model):
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
-    exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE, related_query_name='joinexercise')
-    percentage = models.FloatField(default=0)
-    completed = models.BooleanField(default=False)
-    last_join = models.DateField(auto_now=True)
-    def toObject(self):
-        return {'title': self.exercise.title , 'kind': self.exercise.get_kind_display(), 'description': self.exercise.description, 
-        'percentage': self.percentage, 'difficulty': self.exercise.difficulty}
+    date = models.DateField()

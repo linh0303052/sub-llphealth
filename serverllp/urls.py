@@ -15,21 +15,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from account import views
-from exercise.views import get_exercise
+from account import views as acc
+from exercise import views as exer
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     #path('login/', views.loginView),
-    path('register/', views.register),
-    path('auth/', views.auth),
-    path('avatar/', views.avatar2),
-    path('avatar/<filename>', views.getavatar),
-    path('forgotpassword/', views.forgot_password),
-    path('getuser/<username>/', views.getUser),
-    path('changepassword/', views.change_password),
-    path('getexercise/<username>/', get_exercise),
+    path('register/', acc.register),
+    path('auth/', acc.auth),
+    path('avatar/', acc.avatar2),
+    path('avatar/<filename>', acc.getavatar),
+    path('forgotpassword/', acc.forgot_password),
+    path('getuser/<username>/', acc.getUser),
+    path('changepassword/', acc.change_password),
+    path('getexercise/<username>/', exer.get_exercise),
+    path('getexercisedates/<username>/', exer.get_date),
+    path('updatedates', exer.update_exercise),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

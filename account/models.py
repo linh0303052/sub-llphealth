@@ -65,6 +65,8 @@ class Account(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    last_exercise = models.DateField(default='2000-01-01', blank=True)
+    no_consecutive_day = models.IntegerField(default=0, blank=True)
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email', 'first_name','last_name', 'dob', 'weight', 'height', 'gender']
