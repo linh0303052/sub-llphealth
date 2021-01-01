@@ -30,7 +30,7 @@ def update_exercise(request):
         username = request.POST['username']
         current_date = datetime.datetime.now()
         users = Account.objects.filter(username=username)
-        if len(user) > 0:
+        if len(users) > 0:
             user = users[0]
             last_date = user.last_exercise
             if last_date != current_date:
