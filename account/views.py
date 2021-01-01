@@ -196,3 +196,14 @@ def getavatar(request, filename):
             return HttpResponse(f.read(), content_type="image/jpeg")
     else:
         return HttpResponse('method not supported')
+
+def getlevel(request, username):
+    data={'success':False}
+    if (request.method == 'GET'):
+        users = Account.objects.filter(username=username)
+        if len(users) > 0:
+            user = users[0]
+            data['level'] = user.get_level()
+    else:
+        data['message'] = 'method not supported'
+    return HttpResponse(json.dumps(data), content_type='application/json')

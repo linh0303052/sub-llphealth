@@ -68,6 +68,8 @@ class Account(AbstractBaseUser):
     last_exercise = models.DateField(default='2000-01-01', blank=True)
     no_consecutive_day = models.IntegerField(default=0, blank=True)
 
+
+
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email', 'first_name','last_name', 'dob', 'weight', 'height', 'gender']
 
@@ -81,3 +83,15 @@ class Account(AbstractBaseUser):
     
     def has_module_perms(self, app_label):
         return True
+
+    def get_level(self):
+        level = 0
+        if no_consecutive_day >= 5:
+            level = 1
+            if no_consecutive_day >= 15:
+                level = 2
+                if no_consecutive_day >= 30:
+                    level = 3
+                    if no_consecutive_day >= 50:
+                        level = 4
+        return level

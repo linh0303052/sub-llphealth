@@ -29,6 +29,7 @@ urlpatterns = [
     path('forgotpassword/', acc.forgot_password),
     path('getuser/<username>/', acc.getUser),
     path('changepassword/', acc.change_password),
+    path('getlevel/<username>/', acc.getlevel),
     path('getexercise/<username>/', exer.get_exercise),
     path('getexercisedates/<username>/', exer.get_date),
     path('updatedates/', exer.update_exercise),
