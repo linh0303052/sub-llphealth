@@ -135,6 +135,7 @@ def getUser(request, username):
         data['D.O.B'] = user.dob.strftime('%Y-%m-%d')
         data['Height'] = user.height
         data['Weight'] = user.weight
+        data['last_exercise'] = user.last_exercise.strftime('%Y-%m-%d')
         if user.gender:
             data['Gender'] = 'Male'
         else:
