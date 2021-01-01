@@ -33,11 +33,10 @@ def update_exercise(request):
         if len(users) > 0:
             user = users[0]
             last_date = user.last_exercise
-            if last_date != current_date:
+            if compare_date(last_date, current_date)
                 new_record = JoinExercise(user = user, date = current_date)
                 new_record.save()
-                yester_of_current = current_date - timedelta(days=1)
-                if (last_date.day == yester_of_current.day and last_date.month == yester_of_current.month and last_date.year == yester_of_current.year):
+                if compare_date(last_date, current_date - timedelta(days=1)):
                     user.no_consecutive_day += 1
                 else:
                     user.no_consecutive_day = 1
@@ -64,3 +63,5 @@ def get_date(request, username):
         data['message'] = 'method not supported'
     return HttpResponse(json.dumps(data), content_type='application/json')
 
+def compare_date(date1, date2):
+    return date1.day == date2.day and date1.month == date2.month and date1.year == date2.year
