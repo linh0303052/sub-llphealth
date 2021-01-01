@@ -51,7 +51,7 @@ def get_date(request, username):
     if (request.method == 'GET'):
         user = Account.objects.filter(username = username)
         records = JoinExercise.objects.filter(user = user[0])
-        dates = [record.date for record in records]
+        dates = [record.date.strftime('%Y-%m-%d') for record in records]
         data['dates'] = dates
         data['no_consecutive'] = user[0].no_consecutive_day
     else:
