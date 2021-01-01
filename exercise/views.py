@@ -33,7 +33,7 @@ def update_exercise(request):
         if len(users) > 0:
             user = users[0]
             last_date = user.last_exercise
-            if compare_date(last_date, current_date)
+            if compare_date(last_date, current_date):
                 new_record = JoinExercise(user = user, date = current_date)
                 new_record.save()
                 if compare_date(last_date, current_date - timedelta(days=1)):
