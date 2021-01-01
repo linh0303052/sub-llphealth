@@ -86,12 +86,12 @@ class Account(AbstractBaseUser):
 
     def get_level(self):
         level = 0
-        if no_consecutive_day >= 5:
+        if self.no_consecutive_day >= 5:
             level = 1
-            if no_consecutive_day >= 15:
+            if self.no_consecutive_day >= 15:
                 level = 2
-                if no_consecutive_day >= 30:
+                if self.no_consecutive_day >= 30:
                     level = 3
-                    if no_consecutive_day >= 50:
+                    if self.no_consecutive_day >= 50:
                         level = 4
         return level
