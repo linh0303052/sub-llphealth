@@ -33,7 +33,7 @@ def update_exercise(request):
         if len(users) > 0:
             user = users[0]
             last_date = user.last_exercise
-            if compare_date(last_date, current_date):
+            if not compare_date(last_date, current_date):
                 new_record = JoinExercise(user = user, date = current_date)
                 new_record.save()
                 if compare_date(last_date, current_date - timedelta(days=1)):
@@ -43,7 +43,7 @@ def update_exercise(request):
                 user.last_exercise = current_date
                 user.save()
             
-            data['success'] = True
+        data['success'] = True
     else:
         data['message'] = 'method not supported'
     return HttpResponse(json.dumps(data), content_type='application/json')
