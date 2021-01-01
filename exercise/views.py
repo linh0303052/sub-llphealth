@@ -4,7 +4,8 @@ import json
 from django.core import serializers
 from django.http import HttpRequest, HttpResponse
 from account.models import Account
-import datetime, timedelta
+import datetime
+from datetime import timedelta
 
 # Create your views her
 
