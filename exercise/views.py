@@ -33,7 +33,7 @@ def update_exercise(request):
         if last_date != current_date:
             new_record = JoinExercise(user = user[0], date = current_date)
             new_record.save()
-            if last_date = current_date - timedelta(days=1):
+            if last_date == current_date - timedelta(days=1):
                 user[0].no_consecutive_day += 1
             else:
                 user[0].no_consecutive_day = 1
