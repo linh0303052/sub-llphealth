@@ -41,7 +41,7 @@ def update_exercise(request):
                 else:
                     user.no_consecutive_day = 1
             data['max_consecutive'] = user.max_consecutive
-            if user.no_consecutive > user.max_consecutive:
+            if user.no_consecutive_day > user.max_consecutive:
                 user.max_consecutive = user.no_consecutive_day
             user.last_exercise = current_date
             user.save()        
