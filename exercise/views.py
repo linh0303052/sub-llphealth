@@ -40,10 +40,14 @@ def update_exercise(request):
                     user.no_consecutive_day += 1
                 else:
                     user.no_consecutive_day = 1
+                data['max_consecutive'] = user.max_consecutive
+                if user.no_consecutive > user.max_consecutive:
+                    user.max_consecutive = user.no_consecutive_day
                 user.last_exercise = current_date
                 user.save()
             
         data['success'] = True
+        data['no_consecutive'] = user.no_consecutive_day
     else:
         data['message'] = 'method not supported'
     return HttpResponse(json.dumps(data), content_type='application/json')

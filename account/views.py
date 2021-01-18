@@ -135,7 +135,6 @@ def getUser(request, username):
         data['D.O.B'] = user.dob.strftime('%Y-%m-%d')
         data['Height'] = user.height
         data['Weight'] = user.weight
-        data['last_exercise'] = user.last_exercise.strftime('%Y-%m-%d')
         if user.gender:
             data['Gender'] = 'Male'
         else:
@@ -203,7 +202,7 @@ def getlevel(request, username):
         users = Account.objects.filter(username=username)
         if len(users) > 0:
             user = users[0]
-            data['level'] = user.get_level()
+            data['max_consecutive'] = user.get_max()
             data['success']= True
     else:
         data['message'] = 'method not supported'

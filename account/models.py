@@ -67,7 +67,7 @@ class Account(AbstractBaseUser):
     is_superuser = models.BooleanField(default=False)
     last_exercise = models.DateField(default='2000-01-01', blank=True)
     no_consecutive_day = models.IntegerField(default=0, blank=True)
-
+    max_consecutive = models.IntegerField(default=0, blank=True)
 
 
     USERNAME_FIELD = 'username'
@@ -84,14 +84,5 @@ class Account(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
 
-    def get_level(self):
-        level = 0
-        if self.no_consecutive_day >= 5:
-            level = 1
-            if self.no_consecutive_day >= 15:
-                level = 2
-                if self.no_consecutive_day >= 30:
-                    level = 3
-                    if self.no_consecutive_day >= 50:
-                        level = 4
-        return level
+    def get_max(self):
+        return self.max_consecutive
