@@ -61,6 +61,7 @@ def get_date(request, username):
         dates = [record.date.strftime('%Y-%m-%d') for record in records]
         data['dates'] = dates
         data['no_consecutive'] = user.no_consecutive_day
+        data['max_consecutive'] = user.max_consecutive
         data['success'] = True
     else:
         data['message'] = 'method not supported'
