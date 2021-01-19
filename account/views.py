@@ -64,7 +64,7 @@ def auth(request):
             user_login(request, login_form.get_user())
             data['success'] = True
             user = Account.objects.get(username=request.POST['username'])
-            data['full_name'] = user.first_name + user.last_name
+            data['full_name'] = user.first_name + ' ' + user.last_name
     else:
         data['message'] = 'method not supported'
     return HttpResponse(json.dumps(data), content_type='application/json')
